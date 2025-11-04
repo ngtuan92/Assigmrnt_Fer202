@@ -1,0 +1,700 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Tailor Swift",
+      "email": "tailor.swift@gmail.com",
+      "password": "123",
+      "role": "user",
+      "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRR8xWzIHbKNcV02c2TplEyunde3KYpLbbUGnVbYMF7u3EI3hV4eGWRsfOuV_fQ2eYJK8Csy8LM4TBMl0_VcAGtRnaJjGe9z4P32-1vdR4&s=10",
+      "JoinedDate": "2024-10-15",
+      "quizzesTaken": [
+        {
+          "quizId": 1,
+          "quizName": "",
+          "dateTaken": "2024-11-01",
+          "score": 400
+        },
+        {
+          "quizId": 2,
+          "quizName": "",
+          "dateTaken": "2024-11-10",
+          "score": 660
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Duc Tuan",
+      "password": "tuandaumoi2004",
+      "email": "nguyenductuan922004@gmail.com",
+      "role": "admin",
+      "avatar": "https://www.pinterest.com/pin/882213014514950961/",
+      "JoinedDate": "2023-05-20"
+    },
+    {
+      "id": "59e0",
+      "name": "Le Minh Gia Man",
+      "email": "leminhgiaman123@gmail.com",
+      "password": "1234",
+      "role": "user",
+      "avatar": "https://i.pravatar.cc/300?u=1762152446305"
+    },
+    {
+      "id": "75a9",
+      "name": "Ha Duy Kien",
+      "email": "haduykien11@gmail.com",
+      "password": "123123",
+      "role": "user",
+      "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTr3jhpAFYpzxx39DRuXIYxNPXc0zI5F6IiMQ&s=1762152741475"
+    },
+    {
+      "id": "e4c9",
+      "name": "Le Van Do Ky",
+      "email": "doky1992@gmail.com",
+      "password": "doky123",
+      "role": "user",
+      "avatar": "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png1762152906473"
+    },
+    {
+      "id": "494e",
+      "name": "Pham Van Long",
+      "email": "longdzai@gmail.com",
+      "password": "123",
+      "role": "user",
+      "avatar": "/default-user.png"
+    },
+    {
+      "id": "c2bf",
+      "name": "Trung Kevin",
+      "email": "trung.kevin.2003@gmail.com",
+      "password": "1234",
+      "role": "user",
+      "avatar": "/public/access/default-user.png"
+    }
+  ],
+  "quizzes": [
+    {
+      "id": "1",
+      "createBy": 2,
+      "createAt": "2025-01-10",
+      "sections": [
+        {
+          "sectionId": "reading",
+          "title": "Reading Comprehension",
+          "totalQuestions": 20,
+          "question": [
+            {
+              "id": 1,
+              "type": "MC",
+              "questionText": "Customer reviews indicate that many modern mobile devices are often unnecessarily _____",
+              "option": [
+                "complication",
+                "complicates",
+                "complicate",
+                "complicate"
+              ],
+              "correctAnswer": "D"
+            },
+            {
+              "id": 2,
+              "type": "MC",
+              "questionText": "Jamal Nawzad has received top performance reviews _____ he joined the sales department two years ago.",
+              "option": [
+                "despite",
+                "except",
+                "since",
+                "during"
+              ],
+              "correctAnswer": "C"
+            },
+            {
+              "id": 3,
+              "type": "MC",
+              "questionText": "Gyeon Corporation’s continuing education policy states that _____ learning new skills enhances creativity and focus.",
+              "option": [
+                "regular",
+                "regularity",
+                "regulate",
+                "regularly"
+              ],
+              "correctAnswer": "D"
+            },
+            {
+              "id": 4,
+              "type": "MC",
+              "questionText": "Among _____ recognized at the company awards ceremony were several engineers from the research department.",
+              "option": [
+                "who",
+                "whose",
+                "they",
+                "those"
+              ],
+              "correctAnswer": "D"
+            },
+            {
+              "id": 5,
+              "type": "MC",
+              "questionText": "All clothing sold in Develyn’s Boutique is made from natural materials and contains no _____ dyes.",
+              "option": [
+                "immediate",
+                "synthetic",
+                "reasonable",
+                "assumed"
+              ],
+              "correctAnswer": "B"
+            },
+            {
+              "id": 6,
+              "type": "MC",
+              "questionText": "Email excerpt: “The seminar will be helpful for those _____ in improving project management efficiency.”",
+              "option": [
+                "interest",
+                "interests",
+                "interested",
+                "interesting"
+              ],
+              "correctAnswer": "C"
+            }
+          ],
+          "groups": [
+            {
+              "groupId": "1",
+              "src": "",
+              "questions": [
+                {
+                  "id": 7,
+                  "type": "MC",
+                  "questionText": "",
+                  "option": [
+                    "interest",
+                    "interests",
+                    "interested",
+                    "interesting"
+                  ],
+                  "correctAnswer": "C"
+                },
+                {
+                  "id": 8,
+                  "type": "MC",
+                  "questionText": "",
+                  "option": [
+                    "develop",
+                    "raise",
+                    "open",
+                    "complete"
+                  ],
+                  "correctAnswer": "A"
+                },
+                {
+                  "id": 9,
+                  "type": "MC",
+                  "questionText": "",
+                  "option": [
+                    "After all",
+                    "For",
+                    "Even so",
+                    "At the same time"
+                  ],
+                  "correctAnswer": "D"
+                }
+              ]
+            },
+            {
+              "groupId": 2,
+              "src": "",
+              "questions": [
+                {
+                  "id": 10,
+                  "type": "MC",
+                  "questionText": "What is suggested about Mr. Benavidez?",
+                  "option": [
+                    "He plans to retire soon.",
+                    "He will remain president after the acquisition.",
+                    "He will relocate to Cancún.",
+                    "He will manage all new restaurants."
+                  ],
+                  "correctAnswer": "B"
+                },
+                {
+                  "id": 11,
+                  "type": "MC",
+                  "questionText": "According to the article, where is Mr. Benavidez from?",
+                  "option": [
+                    "Cancún",
+                    "San Diego",
+                    "Dallas",
+                    "Houston"
+                  ],
+                  "correctAnswer": "A"
+                }
+              ]
+            },
+            {
+              "groupId": "3",
+              "src": "",
+              "questions": [
+                {
+                  "id": 12,
+                  "type": "MC",
+                  "questionText": "What is suggested about Mr. Benavidez?",
+                  "option": [
+                    "He plans to retire soon.",
+                    "He will remain president after the acquisition.",
+                    "He will relocate to Cancún.",
+                    "He will manage all new restaurants."
+                  ],
+                  "correctAnswer": "B"
+                },
+                {
+                  "id": 13,
+                  "type": "MC",
+                  "questionText": "According to the article, where is Mr. Benavidez from?",
+                  "option": [
+                    "Cancún",
+                    "San Diego",
+                    "Dallas",
+                    "Houston"
+                  ],
+                  "correctAnswer": "A"
+                },
+                {
+                  "id": 14,
+                  "type": "MC",
+                  "questionText": "What is indicated about the Pablo’s restaurant chain?",
+                  "option": [
+                    "It was recently sold in an auction.",
+                    "It will soon change its name.",
+                    "It was founded 40 years ago.",
+                    "It operates in several countries."
+                  ],
+                  "correctAnswer": "C"
+                }
+              ]
+            },
+            {
+              "groupId": "5",
+              "src": "",
+              "questions": [
+                {
+                  "id": 15,
+                  "type": "MC",
+                  "questionText": "What is suggested about Mr. Bach?",
+                  "option": [
+                    "He has been to Kansai more than once.",
+                    "He currently works in Beijing.",
+                    "He is on a business trip.",
+                    "He works for Fly Right Airlines."
+                  ],
+                  "correctAnswer": "C"
+                },
+                {
+                  "id": 16,
+                  "type": "MC",
+                  "questionText": "At 12:15, what does Mr. Otani mean when he writes, “Sure thing”?",
+                  "option": [
+                    "He has confirmed the arrival time of a flight.",
+                    "He is certain he will be able to find a parking place.",
+                    "He agrees to wait at the door near the customs area.",
+                    "He knows Mr. Bach must pass through customs."
+                  ],
+                  "correctAnswer": "C"
+                }
+              ]
+            },
+            {
+              "groupId": "4",
+              "src": "",
+              "questions": [
+                {
+                  "id": 17,
+                  "type": "MC",
+                  "questionText": "What is indicated about advertising space on the Mooringtown Library notice board?",
+                  "option": [
+                    "It is available at no charge.",
+                    "It can be used for any length of time.",
+                    "It is open to all area businesses.",
+                    "It is intended mainly for sporting events."
+                  ],
+                  "correctAnswer": "A"
+                },
+                {
+                  "id": 18,
+                  "type": "MC",
+                  "questionText": "What is NOT a stated requirement for a notice to be placed on the board?",
+                  "option": [
+                    "It must meet certain size requirements.",
+                    "It must be marked with posting dates.",
+                    "It must be reviewed beforehand.",
+                    "It must be signed by a librarian."
+                  ],
+                  "correctAnswer": "D"
+                },
+                {
+                  "id": 19,
+                  "type": "MC",
+                  "questionText": "What should an advertiser bring to the library when making a submission?",
+                  "option": [
+                    "An outline of proposed content",
+                    "A final version of the notice",
+                    "A completed submission form",
+                    "A letter from an organization"
+                  ],
+                  "correctAnswer": "B"
+                },
+                {
+                  "id": 20,
+                  "type": "MC",
+                  "questionText": "In which of the positions marked [1], [2], [3], and [4] does the following sentence best belong? \"The name and telephone number of the person posting the notice must be clearly marked on the back.\"",
+                  "option": [
+                    "[1]",
+                    "[2]",
+                    "[3]",
+                    "[4]"
+                  ],
+                  "correctAnswer": "A"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionId": "listening",
+          "title": "Listening Comprehension",
+          "totalQuestions": 20,
+          "description": "In the Listening test, you will be asked to demonstrate how well you understand spoken English. The entire Listening test will last approximately 45 minutes. There are four parts, and directions are given for each part. You must mark your answers on the separate answer sheet. Do not write your answers in your test book.",
+          "audio": "https://dethitracnghiem.vn/wp-content/uploads/2025/08/LC-TOIEC-de-1-P.1.mp3?_=1",
+          "groups": [
+            {
+              "id": 1,
+              "type": "AudioMC",
+              "directions": "For each question in this part, you will hear four statements about a picture in your test book. When you hear the statements, you must select the one statement that best describes what you see in the picture. Then find the number of the question on your answer sheet and mark your answer. The statements will not be printed in your test book and will be spoken only one time.",
+              "question": [
+                {
+                  "id": 1,
+                  "questionText": "",
+                  "src": "/access/img_test/Practice_1_q1.png",
+                  "option": [
+                    "She's eating in a picnic area",
+                    "She's waiting in line at a food truck.",
+                    "She's wiping off a bench.",
+                    "She's throwing away a plate."
+                  ],
+                  "correctAnswer": "A"
+                },
+                {
+                  "id": 2,
+                  "questionText": "",
+                  "src": "/access/img_test/P1_q2.png",
+                  "option": [
+                    "The man is brushing snow off the roof of a car.",
+                    "The man is standing in the snow beside a car.",
+                    "The man is shoveling snow from a walkway.",
+                    "The man is running through the snow."
+                  ],
+                  "correctAnswer": "C"
+                },
+                {
+                  "id": 3,
+                  "questionText": "",
+                  "src": "/access/img_test/P1_3.png",
+                  "option": [
+                    "Some workers are hanging art in a gallery.",
+                    "Two of the people are having a conversation.",
+                    "One of the men is rearranging cushions on a sofa.",
+                    "One of the men is painting a picture."
+                  ],
+                  "correctAnswer": "D"
+                },
+                {
+                  "id": 4,
+                  "questionText": "",
+                  "src": "/access/img_test/P1_4.png",
+                  "option": [
+                    "Vehicles are entering a parking garage.",
+                    "Clothes hangers are scattered on the ground.",
+                    "Empty racks are lined up next to a building.",
+                    "Clothing is being displayed under a tent."
+                  ],
+                  "correctAnswer": "B"
+                },
+                {
+                  "id": 5,
+                  "questionText": "",
+                  "src": "/access/img_test/Q1_5.png",
+                  "option": [
+                    "A woman is loading dishes into a cabinet.",
+                    "A woman is arranging glasses on shelves.",
+                    "A woman is sweeping the floor.",
+                    "A woman is closing the refrigerator."
+                  ],
+                  "correctAnswer": "B"
+                },
+                {
+                  "id": 6,
+                  "questionText": "",
+                  "src": "/access/img_test/P1_6.png",
+                  "option": [
+                    "People are boarding a bus.",
+                    "People are crossing a bridge.",
+                    "People are waiting at a crosswalk.",
+                    "People are walking down some stairs."
+                  ],
+                  "correctAnswer": "C"
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "type": "AudioMC",
+              "directions": "You will hear a question or statement and three responses spoken in English. They will not be printed in your test book and will be spoken only one time. Select the best response to the question or statement and mark the letter (A), (B), or (C) on your answer sheet.",
+              "question": [
+                {
+                  "id": 7,
+                  "questionText": "How old is this building?",
+                  "src": "",
+                  "option": [
+                    "At the corner office.",
+                    "I turned it off yesterday.",
+                    "Yes, I met her last week."
+                  ],
+                  "correctAnswer": "A"
+                },
+                {
+                  "id": 8,
+                  "questionText": "Can you come to my jazz performance tonight?",
+                  "src": "",
+                  "option": [
+                    "By express delivery.",
+                    "About two hours ago.",
+                    "No, I didn’t order it."
+                  ],
+                  "correctAnswer": "B"
+                },
+                {
+                  "id": 9,
+                  "questionText": "Which apartment submitted a work order?",
+                  "src": "",
+                  "option": [
+                    "We can share the taxi.",
+                    "Please take a seat.",
+                    "It closes at seven."
+                  ],
+                  "correctAnswer": "C"
+                },
+                {
+                  "id": 10,
+                  "questionText": "Will you contact the vendor about changing our delivery date?",
+                  "src": "",
+                  "option": [
+                    "I’ll email the receipt.",
+                    "On the third floor.",
+                    "Because it was broken."
+                  ],
+                  "correctAnswer": "A"
+                },
+                {
+                  "id": 11,
+                  "questionText": "Why was the maintenance worker...",
+                  "src": "",
+                  "option": [
+                    "That’s not my department.",
+                    "The meeting starts soon.",
+                    "I usually take the train."
+                  ],
+                  "correctAnswer": "B"
+                },
+                {
+                  "id": 12,
+                  "questionText": "Did management make a hiring decision yet?",
+                  "src": "",
+                  "option": [
+                    "Every other Friday.",
+                    "Yes, I’ll sign for it.",
+                    "The one on your right."
+                  ],
+                  "correctAnswer": "A"
+                }
+              ]
+            },
+            {
+              "id": 3,
+              "type": "AudioMC",
+              "directions": "You will hear a question or statement and three responses spoken in English. They will not be printed in your test book and will be spoken only one time. Select the best response to the question or statement and mark the letter (A), (B), or (C) on your answer sheet.",
+              "question": [
+                {
+                  "id": 13,
+                  "questionText": "What are the speakers mainly discussing?",
+                  "src": "",
+                  "option": [
+                    "A schedule change",
+                    "A mistake in an invoice",
+                    "A product launch",
+                    "A travel reservation"
+                  ],
+                  "correctAnswer": "B"
+                },
+                {
+                  "id": 14,
+                  "questionText": "What does the woman ask the man to do?",
+                  "src": "",
+                  "option": [
+                    "A. Confirm a delivery date",
+                    "B. Reserve a meeting room",
+                    "C. Call the supplier",
+                    "D. Prepare a presentation"
+                  ],
+                  "correctAnswer": "C"
+                },
+                {
+                  "id": 15,
+                  "questionText": "When will they most likely meet again?",
+                  "src": "",
+                  "option": [
+                    "A. This afternoon",
+                    "B. Tomorrow morning",
+                    "C. Next Monday",
+                    "D. In two weeks"
+                  ],
+                  "correctAnswer": "A"
+                }
+              ]
+            },
+            {
+              "id": 4,
+              "type": "AudioMC",
+              "directions": "Listen to the conversation and answer the questions.",
+              "question": [
+                {
+                  "id": 16,
+                  "questionText": "Why is the man calling?",
+                  "src": "",
+                  "option": [
+                    "To request a refund",
+                    "To change an appointment",
+                    "To apply for a job",
+                    "To place a large order"
+                  ],
+                  "correctAnswer": "D"
+                },
+                {
+                  "id": 17,
+                  "questionText": "What problem do the speakers mention?",
+                  "src": "",
+                  "option": [
+                    "A shipment is delayed",
+                    "A computer is not working",
+                    "A contract is missing",
+                    "A budget was reduced"
+                  ],
+                  "correctAnswer": "A"
+                },
+                {
+                  "id": 18,
+                  "questionText": "What will the woman probably do next?",
+                  "src": "",
+                  "option": [
+                    "Contact technical support",
+                    "Visit the warehouse",
+                    "Email the revised file",
+                    "Talk to her supervisor"
+                  ],
+                  "correctAnswer": "C"
+                }
+              ]
+            },
+            {
+              "id": 5,
+              "type": "AudioMC",
+              "directions": "PART 4: You will hear a talk given by a single speaker. Choose the best answer to each question.",
+              "question": [
+                {
+                  "id": 19,
+                  "questionText": "What is the purpose of the announcement?",
+                  "src": "",
+                  "option": [
+                    "To report a delay",
+                    "To request volunteers",
+                    "To promote a sale",
+                    "To introduce a new policy"
+                  ],
+                  "correctAnswer": "D"
+                },
+                {
+                  "id": 20,
+                  "questionText": "What are listeners asked to do?",
+                  "src": "",
+                  "option": [
+                    "Arrive earlier than usual",
+                    "Submit a feedback form",
+                    "Bring identification",
+                    "Update their passwords"
+                  ],
+                  "correctAnswer": "B"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "exams": [
+    {
+      "id": "1",
+      "title": "TOIEC Practice Test 1",
+      "durationMinutes": 120,
+      "learners": 56734,
+      "description": "Đề full 7 phần Reading & 4 phần Listening, độ khó trung bình, bám sát format đề thi thật."
+    },
+    {
+      "id": "2",
+      "title": "TOIEC Practice Test 2",
+      "durationMinutes": 120,
+      "learners": 2343,
+      "description": "Tập trung Part 3–4 (hội thoại & độc thoại) và Part 6–7, giúp luyện tốc độ xử lý thông tin dài."
+    },
+    {
+      "id": "3",
+      "title": "TOIEC Practice Test 3",
+      "durationMinutes": 120,
+      "learners": 3435,
+      "description": "Tăng cường vốn từ chủ đề công sở, lịch trình, logistics; có nhiều nhóm câu kèm hình/biểu đồ."
+    },
+    {
+      "id": "4",
+      "title": "TOIEC Practice Test 4",
+      "durationMinutes": 60,
+      "learners": 3454,
+      "description": "Phân bổ độ khó đồng đều; Part 5 từ loại & cấu trúc câu chiếm tỉ trọng lớn."
+    },
+    {
+      "id": "5",
+      "title": "TOIEC Practice Test 5",
+      "durationMinutes": 60,
+      "learners": 1234,
+      "description": "Chú trọng bẫy ngữ pháp và paraphrase trong Listening; phù hợp ôn tăng điểm nhanh."
+    },
+    {
+      "id": "6",
+      "title": "TOIEC Practice Test 6",
+      "durationMinutes": 120,
+      "learners": 212,
+      "description": "Nhiều đoạn hội thoại đa ngữ cảnh (khách sạn, sân bay, cuộc họp); Reading part 7 dài."
+    },
+    {
+      "id": "7",
+      "title": "TOIEC Practice Test 7",
+      "durationMinutes": 120,
+      "learners": 2321,
+      "description": "Part 4 gồm các bài nói ngắn như thông báo, giới thiệu hoặc bản tin, Part 6 tập trung vào liên từ"
+    },
+    {
+      "id": "8",
+      "title": "TOIEC Practice Test 8",
+      "durationMinutes": 120,
+      "learners": 1134,
+      "description": "Đề practice thiên về chủ đề doanh nghiệp nhỏ, dịch vụ khách hàng, đặt hàng – vận chuyển."
+    }
+  ]
+}
