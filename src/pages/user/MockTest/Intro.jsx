@@ -1,20 +1,52 @@
-import React, { useState } from 'react'
-import { Card, Col, Container, Row, Button } from 'react-bootstrap'
+import React, { useState, useEffect } from 'react'
+import { Card, Col, Container, Row, Button, Spinner, Badge } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import MainLayout from '../../../layouts/user/MainLayout'
 import Rating from '@mui/material/Rating';
 import ConfirmModal from '../../../components/user/confirmModal';
+import { practiceService } from '../../../services/practiceService';
+import { examService } from '../../../services/examService';
 
 const Intro = () => {
-    const [hoveredCard, setHoveredCard] = useState(null);
+    const [practices, setPractices] = useState([]);
+    const [exams, setExams] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [showConfirm, setShowConfirm] = useState(false);
     const [pendingAction, setPendingAction] = useState(null);
+    const [pendingType, setPendingType] = useState('listening');
+    const [selectedPracticeId, setSelectedPracticeId] = useState(null);
 
     const navigate = useNavigate();
 
-    const requestStartTest = (type) => {
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const [practicesData, examsData] = await Promise.all([
+                practiceService.fetchPractices(),
+                examService.getAllExams()
+            ]);
+            setPractices(practicesData || []);
+            setExams(examsData || []);
+        } catch (e) {
+            console.error('Error fetching data:', e);
+            setPractices([]);
+            setExams([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const requestStartTest = (type, quizId) => {
+        // ✅ Lưu type và quizId vào state
+        setPendingType(type);
+        setSelectedPracticeId(quizId);
+
         setPendingAction(() => () => {
-            navigate(`/mock-test/${type}`);
+            navigate(`/mock-test/${type}/${quizId}`);
         });
         setShowConfirm(true);
     };
@@ -24,176 +56,154 @@ const Intro = () => {
         if (pendingAction) {
             pendingAction();
         }
+    };
+
+    const formatLearnerCount = (count) => {
+        if (count >= 1000000) {
+            return `${(count / 1000000).toFixed(1)}M`;
+        } else if (count >= 1000) {
+            return `${(count / 1000).toFixed(1)}K`;
+        }
+        return count?.toString() || '0';
+    };
+
+    const getExamById = (examId) => {
+        return exams.find(exam => exam.id === examId);
+    };
+
+    if (loading) {
+        return (
+            <MainLayout>
+                <Container className='my-5 text-center'>
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden">Đang tải...</span>
+                    </Spinner>
+                    <p className='mt-3'>Đang tải danh sách đề thi...</p>
+                </Container>
+            </MainLayout>
+        );
     }
+
     return (
         <MainLayout>
             <Container className='my-5'>
-                <Row>
-                    <Col md={4}>
-                        <img
-                            src='/access/Luyen-De-VSTEP-2025-4.png'
-                            alt='mock-test'
-                            style={{ width: "100%", height: "auto", borderRadius: "10px" }}
-                        />
-                    </Col>
-                    <Col md={8} style={{ paddingLeft: "50px" }}>
-                        <h2 style={{ color: "#404040ff", fontSize: "50px", fontWeight: "bold" }}>
-                            Bộ đề thi thử TOEIC - TEST 1 (Reading và Listening)
-                        </h2>
-                        <Rating name="size-large" defaultValue={4.5} size="large" />
-                        <p style={{ color: "#404040ff", fontSize: "18px", marginTop: "30px" }}>
-                            Đề thi thử TOIEC được thiết kế bám sát cấu trúc và định dạng chính thức của kỳ thi đánh giá năng lực tiếng Anh do Bộ Giáo dục và Đào tạo ban hành. Bộ đề bao gồm đầy đủ bốn kỹ năng Listening, Reading, giúp thí sinh làm quen với dạng câu hỏi, thời lượng và độ khó tương đương đề thi thật. Nội dung được xây dựng từ các chủ đề tiếng Anh học thuật và đời sống quen thuộc, kèm theo đáp án và gợi ý trả lời chi tiết để hỗ trợ người học đánh giá chính xác trình độ hiện tại. Việc luyện tập với bộ đề thi này không chỉ giúp bạn cải thiện tốc độ làm bài và kỹ năng xử lý câu hỏi mà còn tăng sự tự tin, tạo nền tảng vững chắc để đạt mục tiêu chứng chỉ TOIEC.
-                        </p>
-                    </Col>
+                <h1 style={{
+                    color: "#404040ff",
+                    fontSize: "50px",
+                    fontWeight: "bold",
+                    marginBottom: "60px"
+                }}>
+                    Practice Tests
+                </h1>
+
+                <Row className='g-4'>
+                    {practices.map((practice) => (
+                        <Col md={6} lg={4} key={practice.id} className='mb-4'>
+                            <Card
+                                style={{
+                                    height: '100%',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                    border: 'none',
+                                    borderRadius: '12px'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.15)';
+                                    e.currentTarget.style.transform = 'translateY(-5px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                }}
+                            >
+                                <Card.Body style={{ padding: '24px' }}>
+                                    <Card.Title style={{
+                                        fontSize: '20px',
+                                        fontWeight: 'bold',
+                                        color: '#404040',
+                                        marginBottom: '12px'
+                                    }}>
+                                        {practice.title}
+                                    </Card.Title>
+
+                                    <div style={{ marginBottom: '15px' }}>
+                                        <Rating
+                                            value={4.5}
+                                            readOnly
+                                            size="small"
+                                        />
+                                        <span style={{
+                                            marginLeft: '8px',
+                                            color: '#999',
+                                            fontSize: '12px'
+                                        }}>
+                                            4.5/5.0
+                                        </span>
+                                    </div>
+
+                                    <Card.Text style={{
+                                        color: '#666',
+                                        marginBottom: '15px',
+                                        minHeight: '60px',
+                                        fontSize: '14px',
+                                        lineHeight: '1.5'
+                                    }}>
+                                        {practice.description?.substring(0, 100)}
+                                        {practice.description?.length > 100 ? '...' : ''}
+                                    </Card.Text>
+
+                                    <div style={{
+                                        display: 'flex',
+                                        gap: '15px',
+                                        marginBottom: '20px',
+                                        fontSize: '13px',
+                                        color: '#999'
+                                    }}>
+                                        <div>⏱ {practice.durationMinutes} phút</div>
+                                        <div>👥 {formatLearnerCount(getExamById(practice.id)?.learners || 0)} người thi</div>
+                                    </div>
+
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                        <Button
+                                            variant="outline-primary"
+                                            size="sm"
+                                            className='flex-grow-1'
+                                            onClick={() => requestStartTest('listening', practice.id)}
+                                            style={{
+                                                fontWeight: 600,
+                                                borderRadius: '6px'
+                                            }}
+                                        >
+                                            🎧 Listening
+                                        </Button>
+                                        <Button
+                                            variant="outline-primary"
+                                            size="sm"
+                                            className='flex-grow-1'
+                                            onClick={() => requestStartTest('reading', practice.id)}
+                                            style={{
+                                                fontWeight: 600,
+                                                borderRadius: '6px'
+                                            }}
+                                        >
+                                            📖 Reading
+                                        </Button>
+                                    </div>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    ))}
                 </Row>
 
-                <div>
-                    <h1 style={{ color: "#404040ff", fontSize: "50px", fontWeight: "bold", marginTop: "60px" }}>
-                        Practice Test 1
-                    </h1>
-                </div>
-
-                <Row className='mt-4'>
-                    <Col md={3} className='mt-4' style={{ marginRight: '40px' }}>
-                        <div
-                            style={{
-                                position: 'relative',
-                                width: '110%',
-                                height: '400px',
-                                borderRadius: '10px',
-                                overflow: 'hidden',
-                                cursor: 'pointer',
-                                transition: 'transform 0.3s ease',
-                                transform: hoveredCard === 'listening' ? 'translateY(-5px)' : 'translateY(0)'
-                            }}
-                            onMouseEnter={() => setHoveredCard('listening')}
-                            onMouseLeave={() => setHoveredCard(null)}
-                        >
-                            <img
-                                src="/access/toeic_reading.png"
-                                alt="Listening Test"
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'inherit',
-                                    transition: 'all 0.4s ease',
-                                    transform: hoveredCard === 'listening' ? 'scale(1.1)' : 'scale(1)',
-                                    filter: hoveredCard === 'listening' ? 'brightness(0.5)' : 'brightness(1)'
-                                }}
-                            />
-
-                            <div style={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: '100%',
-                                background: 'rgba(0, 0, 0, 0.75)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                opacity: hoveredCard === 'listening' ? 1 : 0,
-                                transition: 'opacity 0.4s ease',
-                                zIndex: 2
-                            }}>
-                                <div style={{
-                                    textAlign: 'center',
-                                    padding: '20px',
-                                    transform: hoveredCard === 'listening' ? 'translateY(0)' : 'translateY(20px)',
-                                    transition: 'transform 0.4s ease'
-                                }}>
-
-                                    <Button
-                                        variant="light"
-                                        size="lg"
-                                        onClick={() => requestStartTest('listening')}
-                                        style={{
-                                            fontWeight: 600,
-                                            padding: '12px 24px',
-                                            borderRadius: '8px',
-                                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
-                                        }}
-                                    >
-                                        Bắt đầu thi Listening
-                                    </Button>
-                                    <ConfirmModal
-                                        show={showConfirm}
-                                        onClose={() => setShowConfirm(false)}
-                                        onConfirm={handleConfirm}
-                                       
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </Col>
-
-                    <Col md={3} className='mt-4'>
-                        <div
-                            style={{
-                                position: 'relative',
-                                width: '110%',
-                                height: '400px',
-                                borderRadius: '10px',
-                                overflow: 'hidden',
-                                cursor: 'pointer',
-                                transition: 'transform 0.3s ease',
-                                transform: hoveredCard === 'reading' ? 'translateY(-5px)' : 'translateY(0)'
-                            }}
-                            onMouseEnter={() => setHoveredCard('reading')}
-                            onMouseLeave={() => setHoveredCard(null)}
-                        >
-                            <img
-                                src="/access/toeic_reading.png"
-                                alt="Reading Test"
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'inherit',
-                                    transition: 'all 0.4s ease',
-                                    transform: hoveredCard === 'reading' ? 'scale(1.1)' : 'scale(1)',
-                                    filter: hoveredCard === 'reading' ? 'brightness(0.5)' : 'brightness(1)'
-                                }}
-                            />
-
-                            <div style={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: '100%',
-                                background: 'rgba(0, 0, 0, 0.75)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                opacity: hoveredCard === 'reading' ? 1 : 0,
-                                transition: 'opacity 0.4s ease',
-                                zIndex: 2
-                            }}>
-                                <div style={{
-                                    textAlign: 'center',
-                                    padding: '20px',
-                                    transform: hoveredCard === 'reading' ? 'translateY(0)' : 'translateY(20px)',
-                                    transition: 'transform 0.4s ease'
-                                }}>
-
-                                    <Button
-                                        variant="light"
-                                        size="lg"
-                                        onClick={() => requestStartTest('reading')}
-                                        style={{
-                                            fontWeight: 600,
-                                            padding: '12px 24px',
-                                            borderRadius: '8px',
-                                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
-                                        }}
-                                    >
-                                        Bắt đầu thi Reading
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    </Col>
-                </Row>
+                {/* ✅ Sửa lại ConfirmModal */}
+                <ConfirmModal
+                    show={showConfirm}
+                    onClose={() => setShowConfirm(false)}
+                    onConfirm={handleConfirm}
+                    type={pendingType}
+                    practiceId={selectedPracticeId}
+                />
             </Container>
         </MainLayout>
     )

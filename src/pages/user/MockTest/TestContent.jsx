@@ -89,20 +89,6 @@ const TestContent = ({
                     </Card.Body>
                 )}
 
-                {isSubmitted && (
-                    <Card.Body className='text-center' style={{ backgroundColor: '#e8f5e9', padding: '40px 20px', borderTop: '3px solid #4caf50' }}>
-                        <h3 style={{ color: '#2e7d32', marginBottom: '20px', fontWeight: 'bold' }}>🎉 Hoàn thành bài thi!</h3>
-                        <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#1b5e20', marginBottom: '10px' }}>
-                            {calculateScore()}/{partSelected === 'LISTENING' ? listeningQuestions.length : toeicQuestions.length}
-                        </div>
-                        <p style={{ fontSize: '1.2rem', color: '#2e7d32', marginBottom: '10px' }}>
-                            Tỷ lệ đúng: <strong>{((calculateScore() / (partSelected === 'LISTENING' ? listeningQuestions.length : toeicQuestions.length)) * 100).toFixed(1)}%</strong>
-                        </p>
-                        <p style={{ fontSize: '0.95rem', color: '#666' }}>
-                            Xem lại các câu hỏi bên trên để hiểu rõ hơn về đáp án
-                        </p>
-                    </Card.Body>
-                )}
             </Card>
         </>
     );

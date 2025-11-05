@@ -6,20 +6,38 @@ import Login from "./pages/user/Auth/Login.jsx"
 import Profile from "./pages/user/Profile/Profile.jsx";
 import Signup from "./pages/user/Auth/Signup.jsx";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
+import AdminLayout from "./layouts/admin/AdminLayout.jsx";
+import RequireAdmin from "./components/common/RequireAdmin.jsx";
+import RequireAuth from "./components/common/RequireAuth.jsx";
+import PracticeAdmin from "./pages/admin/PracticeAdmin.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
 
 function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<Navigate to="/home" replace />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/mock-test" element={<Intro />} />
-        <Route path="/mock-test/:type" element={<Test />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/signup" element={<Signup />} />
-      </Routes>
+      <AuthProvider>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+
+          {/* Routes yêu cầu đăng nhập */}
+          <Route element={<RequireAuth />}>
+            <Route path="/mock-test" element={<Intro />} />
+            <Route path="/mock-test/:type/:quizId" element={<Test />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+
+          {/* Admin routes */}
+          <Route element={<RequireAdmin />}>
+            <Route path="/admin/exams" element={<AdminLayout />}>
+              <Route index element={<PracticeAdmin />} />
+            </Route>
+          </Route>
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

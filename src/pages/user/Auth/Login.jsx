@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './Login.css';
 import { AuthContext } from '../../../context/AuthContext'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Alert } from '@mui/material';
 
 const Login = () => {
@@ -12,8 +12,17 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  const { login } = useContext(AuthContext);
-  const navigate = useNavigate()
+  const { login, isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Redirect nếu đã đăng nhập
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = location.state?.from?.pathname || '/home';
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,10 +43,13 @@ const Login = () => {
         setSuccess("Đăng nhập thành công!");
         console.log("Success", result.user)
         sessionStorage.setItem("name", result.user.name);
-        if (result.users && result.users.role === 'admin') {
-          navigate("/admin");
+
+        // Redirect dựa trên role và from location
+        const from = location.state?.from?.pathname || '/home';
+        if (result.user && result.user.role === 'admin') {
+          navigate("/admin/exams");
         } else {
-          navigate("/");
+          navigate(from, { replace: true });
         }
       } else {
         setError(result.message || "Đăng nhập thất bại");

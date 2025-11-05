@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Row, Col, Container } from 'react-bootstrap';
 import MainLayout from '../../../layouts/user/MainLayout';
 import PopupSubmitTest from '../../../components/user/popupSubmitTest';
+import TestResultModal from '../../../components/user/TestResultModal';
 import TestContent from './TestContent';
 import TestSidebar from './TestSidebar';
 import { getQuizById } from '../../../services/testAPI';
+import { historyService } from '../../../services/historyService';
+import { examService } from '../../../services/examService';
 
 const Test = () => {
     const { type, quizId } = useParams();
+    const navigate = useNavigate();
     const initialPart = (type && type.toLowerCase() === 'listening') ? 'LISTENING' : 'READING';
 
     const [partSelected, setPartSelected] = useState(initialPart);
@@ -16,8 +20,11 @@ const Test = () => {
     const [markedQuestions, setMarkedQuestions] = useState(new Set());
     const [currentQuestion, setCurrentQuestion] = useState(1);
     const [timeRemaining, setTimeRemaining] = useState(0);
+    const [startTime, setStartTime] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
+    const [showResult, setShowResult] = useState(false);
+    const [hasUpdatedLearnerCount, setHasUpdatedLearnerCount] = useState(false);
 
     const [quizData, setQuizData] = useState(null);
     const [readingQuestions, setReadingQuestions] = useState([]);
@@ -25,10 +32,21 @@ const Test = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Lưu thời gian bắt đầu
+        setStartTime(new Date());
+
         const fetchQuizData = async () => {
             try {
                 setLoading(true);
-                const data = await getQuizById(quizId || '1');
+
+                // Kiểm tra nếu quizId không tồn tại
+                if (!quizId) {
+                    console.error('quizId is missing from URL');
+                    navigate('/mock-test');
+                    return;
+                }
+
+                const data = await getQuizById(quizId);
                 setQuizData(data);
 
                 const readingSection = data.sections?.find(s => s.sectionId === 'reading');
@@ -51,7 +69,7 @@ const Test = () => {
                         (group.question || []).map(q => ({
                             ...q,
                             groupId: group.id,
-                            directions: group.directions 
+                            directions: group.directions
                         }))
                     );
                     setListeningQuestions(listeningQs);
@@ -59,7 +77,7 @@ const Test = () => {
                     setListeningQuestions([]);
                 }
 
-                const duration = partSelected === 'LISTENING' ? 45 : 75;
+                const duration = partSelected === 'LISTENING' ? 75 : 45;
                 setTimeRemaining(duration * 60);
 
                 setLoading(false);
@@ -72,7 +90,7 @@ const Test = () => {
         };
 
         fetchQuizData();
-    }, [quizId, partSelected]);
+    }, [quizId, partSelected, navigate]);
 
     useEffect(() => {
         if (partSelected === 'LISTENING' && listeningQuestions.length > 0) {
@@ -103,6 +121,13 @@ const Test = () => {
         return `${m}:${ss.toString().padStart(2, '0')}`;
     };
 
+    const getTimeSpent = () => {
+        if (!startTime) return '0:00';
+        const endTime = new Date();
+        const diffInSeconds = Math.floor((endTime - startTime) / 1000);
+        return formatTime(diffInSeconds);
+    };
+
     const handleAnswerSelect = (questionId, optionId) => {
         if (isSubmitted) return;
         setAnswers(prev => ({ ...prev, [questionId]: optionId }));
@@ -118,8 +143,15 @@ const Test = () => {
     };
 
     const requestSubmit = () => setShowConfirm(true);
-    const handleConfirmSubmit = () => { setIsSubmitted(true); setShowConfirm(false); };
-    const cancelSubmit = () => setShowConfirm(false);
+
+    const handleConfirmSubmit = () => {
+        setIsSubmitted(true);
+        setShowConfirm(false);
+        setShowResult(true); // Hiển thị popup kết quả
+
+        // Lưu lịch sử thi
+        saveTestResult();
+    }; const cancelSubmit = () => setShowConfirm(false);
 
     const calculateScore = () => {
         let correct = 0;
@@ -152,6 +184,40 @@ const Test = () => {
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
 
+    const handleCloseResult = () => {
+        setShowResult(false);
+        // Có thể redirect về trang chủ hoặc làm gì đó khác
+        // navigate('/mock-test');
+    };
+
+    const saveTestResult = () => {
+        try {
+            const score = calculateScore();
+            const questions = partSelected === 'LISTENING' ? listeningQuestions : readingQuestions;
+            const totalQuestions = questions.length;
+
+            // Tính điểm TOEIC
+            const toeicScore = historyService.calculateToeicScore(score, totalQuestions, partSelected);
+
+            const testResult = {
+                quizId: quizId,
+                quizName: quizData?.title || `Practice ${quizId}`,
+                type: partSelected, // 'LISTENING' hoặc 'READING'
+                score: toeicScore, // Điểm TOEIC đã tính
+                totalQuestions: totalQuestions,
+                correctAnswers: score, // Số câu đúng
+                timeSpent: getTimeSpent(),
+                answers: answers,
+                questions: questions
+            };
+
+            historyService.saveTestHistory(testResult);
+            console.log('Test result saved:', testResult);
+        } catch (error) {
+            console.error('Error saving test result:', error);
+        }
+    };
+
     if (loading) {
         return (
             <MainLayout>
@@ -166,7 +232,7 @@ const Test = () => {
         part: partSelected,
         partName: partSelected === 'LISTENING' ? 'LISTENING SECTION' : 'READING SECTION',
         totalQuestions: partSelected === 'LISTENING' ? listeningQuestions.length : readingQuestions.length,
-        timeLimit: partSelected === 'LISTENING' ? 45 : 75,
+        timeLimit: partSelected === 'LISTENING' ? 75 : 45,
         instructions: partSelected === 'LISTENING'
             ? quizData?.sections.find(s => s.sectionId === 'listening')?.description || ''
             : 'Read each question carefully and choose the best answer.'
@@ -218,6 +284,16 @@ const Test = () => {
                 onClose={cancelSubmit}
                 answersCount={Object.keys(answers).length}
                 totalQuestions={readingQuestions.length + listeningQuestions.length}
+            />
+
+            {/* Popup hiển thị kết quả */}
+            <TestResultModal
+                show={showResult}
+                onClose={handleCloseResult}
+                score={calculateScore()}
+                totalQuestions={partSelected === 'LISTENING' ? listeningQuestions.length : readingQuestions.length}
+                timeSpent={getTimeSpent()}
+                partSelected={partSelected}
             />
         </MainLayout>
     );

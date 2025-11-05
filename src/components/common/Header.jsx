@@ -46,15 +46,11 @@ const Header = () => {
                             <>
                                 {user.role === 'admin' ? (
                                     <>
-                                        <Nav.Link as={Link} to="/admin" style={{ color: "#404040ff" }}>
-                                            Dashboard
-                                        </Nav.Link>
-                                        <Nav.Link as={Link} to="/admin/questions" style={{ color: "#404040ff" }}>
+        
+                                        <Nav.Link as={Link} to="/admin/exams" style={{ color: "#404040ff" }}>
                                             Quản lý câu hỏi
                                         </Nav.Link>
-                                        <Nav.Link as={Link} to="/admin/users" style={{ color: "#404040ff" }}>
-                                            Quản lý người dùng
-                                        </Nav.Link>
+                                     
                                     </>
                                 ) : (
                                     <>

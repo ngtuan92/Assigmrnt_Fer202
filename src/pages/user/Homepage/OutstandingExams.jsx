@@ -1,61 +1,106 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Card, Col, Row } from 'react-bootstrap'
-import { IoMdTime } from "react-icons/io";
-import { LuUserRoundPen } from "react-icons/lu";
-import { FaRegComments } from "react-icons/fa6";
+import React, { useContext, useState } from 'react'
+import { Button, Container, Row, Col } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
-import getExams from '../../../services/examAPI';
-
+import { AuthContext } from '../../../context/AuthContext';
+import LoginRequiredModal from '../../../components/user/LoginRequiredModal';
 
 const OutstandingExams = () => {
-    const [exams, setExams] = useState([])
+    const navigate = useNavigate();
+    const { isAuthenticated } = useContext(AuthContext);
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
-    const navigate = useNavigate()
-
-    const goIntroTest = () => {
-        navigate('/mock-test')
-    }
-
-    const fetchExams = async () => {
-        try {
-            const data = await getExams();
-            setExams(data)
-        } catch (error) {
-            console.error('Failed to fetch exams:', error);
+    const handleStartTest = () => {
+        if (!isAuthenticated) {
+            setShowLoginModal(true);
+            return;
         }
-    }
-
-    useEffect(() => {
-        fetchExams();
-    }, [])
+        navigate('/mock-test');
+    };
 
     return (
-        <div>
-            <strong style={{ color: "#404040ff", fontSize: "40px", display: "flex", justifyContent: "center" }}>Đề thi nổi bật</strong>
-            <p style={{ color: "#404040ff", fontSize: "18px", display: "flex", justifyContent: "center" }} className="mt-3">
-                Khám phá các đề thi TOEIC nổi bật, được thiết kế theo chuẩn quốc tế, giúp bạn luyện tập và nâng cao kỹ năng làm bài hiệu quả.
-            </p>
-            <Row>
-                {exams.map((e) => {
-                    return(
-                    <Col md={3} className='mt-4' key={e.id}>
-                        <Card style={{ width: '18rem', height: '15rem', backgroundColor: '#f8f9fa' }}>
-                            <Card.Body>
-                                <Card.Title className='mb-3'>{e.title}</Card.Title>
-                                <Card.Subtitle className="mb-2 text-muted d-flex align-items-center">
-                                    <IoMdTime className="me-1" />{e.durationMinutes} | <LuUserRoundPen className="me-1 m-2" />{e.learners}
+        <Container className='my-5'>
+            <div style={{ marginBottom: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                <h2 style={{
+                    color: "#404040ff",
+                    fontSize: "40px",
+                    fontWeight: "bold",
+                    marginBottom: '15px'
+                }}>
+                    Đề thi nổi bật
+                </h2>
+                <p style={{
+                    color: "#666",
+                    fontSize: "16px",
+                    lineHeight: '1.6'
+                }}>
+                    Khám phá các đề thi TOEIC nổi bật, được thiết kế theo chuẩn quốc tế, giúp bạn luyện tập và nâng cao kỹ năng làm bài hiệu quả.
+                </p>
+            </div>
 
-                                </Card.Subtitle>
-                                <Card.Text>
-                                    {e.description}
-                                </Card.Text>
-                                <button onClick={goIntroTest} className='btn btn-outline-primary' style={{ width: '90%', display: 'block', margin: '0 auto' }}>Xem chi tiết</button>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                )})}
+            <Row className='align-items-center' style={{
+                backgroundColor: '#f8f9fa',
+                padding: '40px 30px',
+                borderRadius: '12px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+            }}>
+                <Col lg={8}>
+                    <h3 style={{
+                        fontSize: '24px',
+                        fontWeight: '600',
+                        color: '#404040',
+                        marginBottom: '15px'
+                    }}>
+                        TOEIC Practice Tests
+                    </h3>
+                    <p style={{
+                        fontSize: '15px',
+                        color: '#555',
+                        lineHeight: '1.8',
+                        marginBottom: '0'
+                    }}>
+                        Bộ đề thi thử TOEIC được thiết kế bám sát cấu trúc và định dạng chính thức của kỳ thi.
+                        Bao gồm đầy đủ 4 kỹ năng Reading, Listening với các dạng câu hỏi, thời lượng và độ khó
+                        tương đương đề thi thật. Nội dung được xây dựng từ các chủ đề học thuật và đời sống quen thuộc,
+                        kèm theo đáp án chi tiết và giải thích để hỗ trợ người học đánh giá chính xác trình độ.
+                        Luyện tập với bộ đề này giúp cải thiện tốc độ làm bài, kỹ năng xử lý câu hỏi và tăng sự tự tin
+                        để đạt mục tiêu chứng chỉ TOEIC.
+                    </p>
+                </Col>
+
+                {/* Bên phải - Button */}
+                <Col lg={4} className='text-center'>
+                    <Button
+                        onClick={handleStartTest}
+                        style={{
+                            backgroundColor: '#007bff',
+                            border: 'none',
+                            padding: '14px 40px',
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            borderRadius: '8px',
+                            transition: 'all 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = '#0056b3';
+                            e.target.style.transform = 'scale(1.05)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = '#007bff';
+                            e.target.style.transform = 'scale(1)';
+                        }}
+                    >
+                        {isAuthenticated ? 'Thi ngay →' : 'Thi ngay →'}
+                    </Button>
+
+                </Col>
             </Row>
-        </div>
+
+            {/* Modal yêu cầu đăng nhập */}
+            <LoginRequiredModal
+                show={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+            />
+        </Container>
     )
 }
 

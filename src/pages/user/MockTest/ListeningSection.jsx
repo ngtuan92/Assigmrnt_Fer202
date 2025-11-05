@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Card, Button, ProgressBar, Form } from 'react-bootstrap';
-import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaStar, FaRegStar } from 'react-icons/fa';
+import { Card, Button, ProgressBar, Form, Alert } from 'react-bootstrap';
+import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaStar, FaRegStar, FaCheck, FaTimes } from 'react-icons/fa';
 
 const ListeningSection = ({
     audioSrc,
@@ -152,25 +152,84 @@ const ListeningSection = ({
 
                             <Form style={{ marginLeft: 6 }}>
                                 {(question.option || []).map((opt, index) => {
-                                    const optionId = String.fromCharCode(65 + index);
-                                    const status = getAnswerStatus ? getAnswerStatus(question.id, optionId) : '';
+                                    const optionLetter = String.fromCharCode(65 + index);
+                                    const isThisCorrect = optionLetter === question.correctAnswer;
+                                    const isThisSelected = answers?.[question.id] === optionLetter;
+
+                                    let optionStyle = {};
+                                    let iconElement = null;
+
+                                    if (isSubmitted) {
+                                        if (isThisCorrect) {
+                                            optionStyle = {
+                                                backgroundColor: '#d4edda',
+                                                border: '2px solid #28a745',
+                                                borderRadius: '5px',
+                                                padding: '8px',
+                                                margin: '4px 0'
+                                            };
+                                            iconElement = <FaCheck style={{ color: '#28a745', marginLeft: '8px' }} />;
+                                        } else if (isThisSelected && !isThisCorrect) {
+                                            optionStyle = {
+                                                backgroundColor: '#f8d7da',
+                                                border: '2px solid #dc3545',
+                                                borderRadius: '5px',
+                                                padding: '8px',
+                                                margin: '4px 0'
+                                            };
+                                            iconElement = <FaTimes style={{ color: '#dc3545', marginLeft: '8px' }} />;
+                                        }
+                                    }
 
                                     return (
-                                        <Form.Check
-                                            key={index}
-                                            type="radio"
-                                            id={`question-${question.id}-option-${index}`}
-                                            name={`question-${question.id}`}
-                                            label={`${optionId}. ${opt}`}
-                                            value={optionId}
-                                            checked={answers?.[question.id] === optionId}
-                                            onChange={() => handleAnswerSelect(question.id, optionId)}
-                                            disabled={isSubmitted}
-                                            className={status === 'correct' ? 'text-success' : status === 'incorrect' ? 'text-danger' : ''}
-                                        />
+                                        <div key={index} style={optionStyle}>
+                                            <Form.Check
+                                                type="radio"
+                                                id={`question-${question.id}-option-${index}`}
+                                                name={`question-${question.id}`}
+                                                label={
+                                                    <span>
+                                                        {`${optionLetter}. ${opt}`}
+                                                        {iconElement}
+                                                    </span>
+                                                }
+                                                value={optionLetter}
+                                                checked={isThisSelected}
+                                                onChange={() => handleAnswerSelect(question.id, optionLetter)}
+                                                disabled={isSubmitted}
+                                            />
+                                        </div>
                                     );
                                 })}
                             </Form>
+
+                            {/* Hiển thị đáp án đúng sau khi submit */}
+                            {isSubmitted && (
+                                <Alert
+                                    variant={answers?.[question.id] === question.correctAnswer ? 'success' : 'danger'}
+                                    style={{ marginTop: '1rem', fontSize: '0.9rem' }}
+                                >
+                                    <div className="d-flex align-items-center">
+                                        {answers?.[question.id] === question.correctAnswer ? (
+                                            <>
+                                                <FaCheck style={{ marginRight: '8px' }} />
+                                                <strong>Chính xác!</strong> Đáp án đúng là: {question.correctAnswer}
+                                            </>
+                                        ) : (
+                                            <>
+                                                <FaTimes style={{ marginRight: '8px' }} />
+                                                <strong>Sai rồi!</strong> Đáp án đúng là: <strong>{question.correctAnswer}</strong>
+                                                {answers?.[question.id] && ` (Bạn chọn: ${answers[question.id]})`}
+                                            </>
+                                        )}
+                                    </div>
+                                    {question.explanation && (
+                                        <div style={{ marginTop: '8px', fontStyle: 'italic' }}>
+                                            <strong>Giải thích:</strong> {question.explanation}
+                                        </div>
+                                    )}
+                                </Alert>
+                            )}
                         </div>
                     ))}
 

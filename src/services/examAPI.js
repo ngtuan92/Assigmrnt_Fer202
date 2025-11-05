@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:9999';
-
+import { API_URL} from '../config';
 export const getExams = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/exams`);
+    const response = await axios.get(`${API_URL}/exams`);
     console.log('List exams:', response.data);
     return response.data;
   } catch (error) {
