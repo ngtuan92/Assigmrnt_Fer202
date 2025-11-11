@@ -8,12 +8,12 @@ export const practiceService = {
       axios.get(`${API_URL}/exams`),
       axios.get(`${API_URL}/quizzes`)
     ]);
-    
+
     return examsRes.data.map(exam => {
       const quiz = quizzesRes.data.find(q => q.id === exam.id);
       const readingSection = quiz?.sections?.find(s => s.sectionId === 'reading');
       const listeningSection = quiz?.sections?.find(s => s.sectionId === 'listening');
-      
+
       return {
         ...exam,
         readingCount: readingSection?.groups?.length || 0,
@@ -27,27 +27,27 @@ export const practiceService = {
       ...data,
       learners: 0
     });
-    
+
     // Tạo quiz ngay sau khi tạo exam
     await axios.post(`${API_URL}/quizzes`, {
       id: examRes.data.id,
       createBy: 2,
       createAt: new Date().toISOString().slice(0, 10),
       sections: [
-        { 
-          sectionId: 'reading', 
-          title: 'Reading Comprehension', 
-          totalQuestions: 0, 
-          question: [], 
-          groups: [] 
+        {
+          sectionId: 'reading',
+          title: 'Reading Comprehension',
+          totalQuestions: 0,
+          question: [],
+          groups: []
         },
-        { 
-          sectionId: 'listening', 
-          title: 'Listening Comprehension', 
-          totalQuestions: 0, 
-          description: '', 
-          audio: '', 
-          groups: [] 
+        {
+          sectionId: 'listening',
+          title: 'Listening Comprehension',
+          totalQuestions: 0,
+          description: '',
+          audio: '',
+          groups: []
         }
       ]
     });
@@ -78,20 +78,20 @@ export const practiceService = {
           createBy: 2,
           createAt: new Date().toISOString().slice(0, 10),
           sections: [
-            { 
-              sectionId: 'reading', 
-              title: 'Reading Comprehension', 
-              totalQuestions: 0, 
-              question: [], 
-              groups: [] 
+            {
+              sectionId: 'reading',
+              title: 'Reading Comprehension',
+              totalQuestions: 0,
+              question: [],
+              groups: []
             },
-            { 
-              sectionId: 'listening', 
-              title: 'Listening Comprehension', 
-              totalQuestions: 0, 
-              description: '', 
-              audio: '', 
-              groups: [] 
+            {
+              sectionId: 'listening',
+              title: 'Listening Comprehension',
+              totalQuestions: 0,
+              description: '',
+              audio: '',
+              groups: []
             }
           ]
         };

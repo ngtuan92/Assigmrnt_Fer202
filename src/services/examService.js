@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = 'http://localhost:9999';
 
 export const examService = {
     // Lấy thông tin exam

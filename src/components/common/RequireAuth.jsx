@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { Container, Spinner } from 'react-bootstrap';
 
@@ -21,7 +21,7 @@ const RequireAuth = ({ children }) => {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    return children;
+    return children ?? <Outlet />;
 };
 
 export default RequireAuth;
