@@ -8,7 +8,8 @@ import TestContent from './TestContent';
 import TestSidebar from './TestSidebar';
 import { getQuizById } from '../../../services/testAPI';
 import { historyService } from '../../../services/historyService';
-import { examService } from '../../../services/examService';
+import { shuffleGroups, checkShuffleMode } from '../../../utils/shuffleUtils';
+
 
 const Test = () => {
     const { type, quizId } = useParams();
@@ -32,65 +33,67 @@ const Test = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Lưu thời gian bắt đầu
-        setStartTime(new Date());
+    setStartTime(new Date());
 
-        const fetchQuizData = async () => {
-            try {
-                setLoading(true);
+    const fetchQuizData = async () => {
+        try {
+            setLoading(true);
 
-                // Kiểm tra nếu quizId không tồn tại
-                if (!quizId) {
-                    console.error('quizId is missing from URL');
-                    navigate('/mock-test');
-                    return;
-                }
-
-                const data = await getQuizById(quizId);
-                setQuizData(data);
-
-                const readingSection = data.sections?.find(s => s.sectionId === 'reading');
-                const listeningSection = data.sections?.find(s => s.sectionId === 'listening');
-
-                if (readingSection) {
-                    const readingQs = [
-                        ...(readingSection.question || []),
-                        ...(readingSection.groups || []).flatMap(group =>
-                            (group.questions || []).map(q => ({ ...q, groupId: group.groupId }))
-                        )
-                    ];
-                    setReadingQuestions(readingQs);
-                } else {
-                    setReadingQuestions([]);
-                }
-
-                if (listeningSection) {
-                    const listeningQs = (listeningSection.groups || []).flatMap(group =>
-                        (group.question || []).map(q => ({
-                            ...q,
-                            groupId: group.id,
-                            directions: group.directions
-                        }))
-                    );
-                    setListeningQuestions(listeningQs);
-                } else {
-                    setListeningQuestions([]);
-                }
-
-                const duration = partSelected === 'LISTENING' ? 75 : 45;
-                setTimeRemaining(duration * 60);
-
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching quiz:', error);
-                setReadingQuestions([]);
-                setListeningQuestions([]);
-                setLoading(false);
+            if (!quizId) {
+                console.error('quizId is missing from URL');
+                navigate('/mock-test');
+                return;
             }
-        };
 
-        fetchQuizData();
-    }, [quizId, partSelected, navigate]);
+            const data = await getQuizById(quizId);
+            setQuizData(data);
+
+            const readingSection = data.sections?.find(s => s.sectionId === 'reading');
+            const listeningSection = data.sections?.find(s => s.sectionId === 'listening');
+
+            let readingQs = [];
+            if (readingSection) {
+                readingQs = [
+                    ...(readingSection.question || []),
+                    ...(readingSection.groups || []).flatMap(group =>
+                        (group.questions || []).map(q => ({ ...q, groupId: group.groupId }))
+                    )
+                ];
+
+                // Shuffle mỗi lần load
+                readingQs = shuffleGroups(readingQs);
+            }
+            setReadingQuestions(readingQs);
+
+            let listeningQs = [];
+            if (listeningSection) {
+                listeningQs = (listeningSection.groups || []).flatMap(group =>
+                    (group.question || []).map(q => ({
+                        ...q,
+                        groupId: group.id,
+                        directions: group.directions
+                    }))
+                );
+
+                // Shuffle mỗi lần load
+                listeningQs = shuffleGroups(listeningQs);
+            }
+            setListeningQuestions(listeningQs);
+
+            const duration = partSelected === 'LISTENING' ? 75 : 45;
+            setTimeRemaining(duration * 60);
+
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching quiz:', error);
+            setReadingQuestions([]);
+            setListeningQuestions([]);
+            setLoading(false);
+        }
+    };
+
+    fetchQuizData();
+}, [quizId, partSelected, navigate]);
 
     useEffect(() => {
         if (partSelected === 'LISTENING' && listeningQuestions.length > 0) {
@@ -147,11 +150,11 @@ const Test = () => {
     const handleConfirmSubmit = () => {
         setIsSubmitted(true);
         setShowConfirm(false);
-        setShowResult(true); // Hiển thị popup kết quả
-
-        // Lưu lịch sử thi
+        setShowResult(true);
         saveTestResult();
-    }; const cancelSubmit = () => setShowConfirm(false);
+    };
+    
+    const cancelSubmit = () => setShowConfirm(false);
 
     const calculateScore = () => {
         let correct = 0;
@@ -186,8 +189,6 @@ const Test = () => {
 
     const handleCloseResult = () => {
         setShowResult(false);
-        // Có thể redirect về trang chủ hoặc làm gì đó khác
-        // navigate('/mock-test');
     };
 
     const saveTestResult = () => {
@@ -196,16 +197,15 @@ const Test = () => {
             const questions = partSelected === 'LISTENING' ? listeningQuestions : readingQuestions;
             const totalQuestions = questions.length;
 
-            // Tính điểm TOEIC
             const toeicScore = historyService.calculateToeicScore(score, totalQuestions, partSelected);
 
             const testResult = {
                 quizId: quizId,
                 quizName: quizData?.title || `Practice ${quizId}`,
-                type: partSelected, // 'LISTENING' hoặc 'READING'
-                score: toeicScore, // Điểm TOEIC đã tính
+                type: partSelected,
+                score: toeicScore,
                 totalQuestions: totalQuestions,
-                correctAnswers: score, // Số câu đúng
+                correctAnswers: score,
                 timeSpent: getTimeSpent(),
                 answers: answers,
                 questions: questions
@@ -286,7 +286,6 @@ const Test = () => {
                 totalQuestions={readingQuestions.length + listeningQuestions.length}
             />
 
-            {/* Popup hiển thị kết quả */}
             <TestResultModal
                 show={showResult}
                 onClose={handleCloseResult}

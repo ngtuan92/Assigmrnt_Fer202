@@ -62,8 +62,7 @@ const ListeningSection = ({
         }
         acc[groupId].questions.push(q);
         return acc;
-    }, {})
-
+    }, {});
 
     return (
         <Card.Body style={{ padding: '20px' }}>
@@ -89,162 +88,173 @@ const ListeningSection = ({
                 </div>
             </div>
 
-            {Object.entries(groupedQuestions).map(([groupId, group], idx, arr) => (
-                <div
-                    key={groupId}
-                    style={{
-                        position: 'relative',
-                        marginBottom: '30px',
-                        paddingBottom: '20px'
-                    }}
-                >
-                    {group.directions && (
-                        <div>
-                            <strong>Directions:</strong>
-                            <p style={{ marginBottom: '20px', lineHeight: '1.6' }}>
-                                {group.directions}
-                            </p>
-                        </div>
-                    )}
+            {/* ✅ TÍNH SỐ THỨ TỰ TỔNG HỢP */}
+            {(() => {
+                let globalQuestionNumber = 0; // Đếm từ 0, sẽ +1 khi render
 
-                    {group.questions.map((question) => (
-                        <div key={question.id} id={`question-${question.id}`} style={{ marginBottom: '25px' }}>
-                            <div className='d-flex justify-content-between align-items-start mb-2'>
-                                <div style={{ fontWeight: 500 }}>
-                                    <strong>Câu {question.id}:</strong> {question.questionText || ''}
-                                </div>
-
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        toggleMarkQuestion(question.id);
-                                    }}
-                                    style={{
-                                        border: 'none',
-                                        background: 'none',
-                                        cursor: 'pointer',
-                                        fontSize: 18,
-                                        color: '#ffc107'
-                                    }}
-                                    title={markedQuestions?.has(question.id) ? 'Bỏ đánh dấu' : 'Đánh dấu xem lại'}
-                                >
-                                    {markedQuestions?.has(question.id) ? <FaStar /> : <FaRegStar />}
-                                </button>
+                return Object.entries(groupedQuestions).map(([groupId, group], idx, arr) => (
+                    <div
+                        key={groupId}
+                        style={{
+                            position: 'relative',
+                            marginBottom: '30px',
+                            paddingBottom: '20px'
+                        }}
+                    >
+                        {group.directions && (
+                            <div>
+                                <strong>Directions:</strong>
+                                <p style={{ marginBottom: '20px', lineHeight: '1.6' }}>
+                                    {group.directions}
+                                </p>
                             </div>
+                        )}
 
-                            {question.src && (
-                                <div style={{ marginBottom: '15px', marginLeft: 6 }}>
-                                    <img
-                                        src={question.src}
-                                        alt={`Question ${question.id}`}
-                                        style={{
-                                            maxWidth: '100%',
-                                            height: 'auto',
-                                            borderRadius: '4px',
-                                            border: '1px solid #ddd'
-                                        }}
-                                        onError={(e) => {
-                                            console.error('Image load failed:', question.src);
-                                        }}
-                                    />
-                                </div>
-                            )}
+                        {group.questions.map((question) => {
+                            // ✅ TĂNG COUNTER VÀ LẤY SỐ THỨ TỰ
+                            globalQuestionNumber++;
+                            const questionNumber = question.displayId || globalQuestionNumber;
 
-                            <Form style={{ marginLeft: 6 }}>
-                                {(question.option || []).map((opt, index) => {
-                                    const optionLetter = String.fromCharCode(65 + index);
-                                    const isThisCorrect = optionLetter === question.correctAnswer;
-                                    const isThisSelected = answers?.[question.id] === optionLetter;
+                            return (
+                                <div key={question.id} id={`question-${question.id}`} style={{ marginBottom: '25px' }}>
+                                    <div className='d-flex justify-content-between align-items-start mb-2'>
+                                        <div style={{ fontWeight: 500 }}>
+                                            {/* ✅ HIỂN THỊ SỐ TUẦN TỰ */}
+                                            <strong>Câu {questionNumber}:</strong> {question.questionText || ''}
+                                        </div>
 
-                                    let optionStyle = {};
-                                    let iconElement = null;
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleMarkQuestion(question.id);
+                                            }}
+                                            style={{
+                                                border: 'none',
+                                                background: 'none',
+                                                cursor: 'pointer',
+                                                fontSize: 18,
+                                                color: '#ffc107'
+                                            }}
+                                            title={markedQuestions?.has(question.id) ? 'Bỏ đánh dấu' : 'Đánh dấu xem lại'}
+                                        >
+                                            {markedQuestions?.has(question.id) ? <FaStar /> : <FaRegStar />}
+                                        </button>
+                                    </div>
 
-                                    if (isSubmitted) {
-                                        if (isThisCorrect) {
-                                            optionStyle = {
-                                                backgroundColor: '#d4edda',
-                                                border: '2px solid #28a745',
-                                                borderRadius: '5px',
-                                                padding: '8px',
-                                                margin: '4px 0'
-                                            };
-                                            iconElement = <FaCheck style={{ color: '#28a745', marginLeft: '8px' }} />;
-                                        } else if (isThisSelected && !isThisCorrect) {
-                                            optionStyle = {
-                                                backgroundColor: '#f8d7da',
-                                                border: '2px solid #dc3545',
-                                                borderRadius: '5px',
-                                                padding: '8px',
-                                                margin: '4px 0'
-                                            };
-                                            iconElement = <FaTimes style={{ color: '#dc3545', marginLeft: '8px' }} />;
-                                        }
-                                    }
-
-                                    return (
-                                        <div key={index} style={optionStyle}>
-                                            <Form.Check
-                                                type="radio"
-                                                id={`question-${question.id}-option-${index}`}
-                                                name={`question-${question.id}`}
-                                                label={
-                                                    <span>
-                                                        {`${optionLetter}. ${opt}`}
-                                                        {iconElement}
-                                                    </span>
-                                                }
-                                                value={optionLetter}
-                                                checked={isThisSelected}
-                                                onChange={() => handleAnswerSelect(question.id, optionLetter)}
-                                                disabled={isSubmitted}
+                                    {question.src && (
+                                        <div style={{ marginBottom: '15px', marginLeft: 6 }}>
+                                            <img
+                                                src={question.src}
+                                                alt={`Question ${questionNumber}`}
+                                                style={{
+                                                    maxWidth: '100%',
+                                                    height: 'auto',
+                                                    borderRadius: '4px',
+                                                    border: '1px solid #ddd'
+                                                }}
+                                                onError={(e) => {
+                                                    console.error('Image load failed:', question.src);
+                                                }}
                                             />
                                         </div>
-                                    );
-                                })}
-                            </Form>
-
-                            {/* Hiển thị đáp án đúng sau khi submit */}
-                            {isSubmitted && (
-                                <Alert
-                                    variant={answers?.[question.id] === question.correctAnswer ? 'success' : 'danger'}
-                                    style={{ marginTop: '1rem', fontSize: '0.9rem' }}
-                                >
-                                    <div className="d-flex align-items-center">
-                                        {answers?.[question.id] === question.correctAnswer ? (
-                                            <>
-                                                <FaCheck style={{ marginRight: '8px' }} />
-                                                <strong>Chính xác!</strong> Đáp án đúng là: {question.correctAnswer}
-                                            </>
-                                        ) : (
-                                            <>
-                                                <FaTimes style={{ marginRight: '8px' }} />
-                                                <strong>Sai rồi!</strong> Đáp án đúng là: <strong>{question.correctAnswer}</strong>
-                                                {answers?.[question.id] && ` (Bạn chọn: ${answers[question.id]})`}
-                                            </>
-                                        )}
-                                    </div>
-                                    {question.explanation && (
-                                        <div style={{ marginTop: '8px', fontStyle: 'italic' }}>
-                                            <strong>Giải thích:</strong> {question.explanation}
-                                        </div>
                                     )}
-                                </Alert>
-                            )}
-                        </div>
-                    ))}
 
-                    {idx < arr.length - 1 && (
-                        <div style={{
-                            position: 'absolute',
-                            bottom: 0,
-                            left: '2.5%',
-                            width: '95%',
-                            height: '1px',
-                            backgroundColor: '#d9dee5'
-                        }} />
-                    )}
-                </div>
-            ))}
+                                    <Form style={{ marginLeft: 6 }}>
+                                        {(question.option || []).map((opt, index) => {
+                                            const optionLetter = String.fromCharCode(65 + index);
+                                            const isThisCorrect = optionLetter === question.correctAnswer;
+                                            const isThisSelected = answers?.[question.id] === optionLetter;
+
+                                            let optionStyle = {};
+                                            let iconElement = null;
+
+                                            if (isSubmitted) {
+                                                if (isThisCorrect) {
+                                                    optionStyle = {
+                                                        backgroundColor: '#d4edda',
+                                                        border: '2px solid #28a745',
+                                                        borderRadius: '5px',
+                                                        padding: '8px',
+                                                        margin: '4px 0'
+                                                    };
+                                                    iconElement = <FaCheck style={{ color: '#28a745', marginLeft: '8px' }} />;
+                                                } else if (isThisSelected && !isThisCorrect) {
+                                                    optionStyle = {
+                                                        backgroundColor: '#f8d7da',
+                                                        border: '2px solid #dc3545',
+                                                        borderRadius: '5px',
+                                                        padding: '8px',
+                                                        margin: '4px 0'
+                                                    };
+                                                    iconElement = <FaTimes style={{ color: '#dc3545', marginLeft: '8px' }} />;
+                                                }
+                                            }
+
+                                            return (
+                                                <div key={index} style={optionStyle}>
+                                                    <Form.Check
+                                                        type="radio"
+                                                        id={`question-${question.id}-option-${index}`}
+                                                        name={`question-${question.id}`}
+                                                        label={
+                                                            <span>
+                                                                {`${optionLetter}. ${opt}`}
+                                                                {iconElement}
+                                                            </span>
+                                                        }
+                                                        value={optionLetter}
+                                                        checked={isThisSelected}
+                                                        onChange={() => handleAnswerSelect(question.id, optionLetter)}
+                                                        disabled={isSubmitted}
+                                                    />
+                                                </div>
+                                            );
+                                        })}
+                                    </Form>
+
+                                    {isSubmitted && (
+                                        <Alert
+                                            variant={answers?.[question.id] === question.correctAnswer ? 'success' : 'danger'}
+                                            style={{ marginTop: '1rem', fontSize: '0.9rem' }}
+                                        >
+                                            <div className="d-flex align-items-center">
+                                                {answers?.[question.id] === question.correctAnswer ? (
+                                                    <>
+                                                        <FaCheck style={{ marginRight: '8px' }} />
+                                                        <strong>Chính xác!</strong> Đáp án đúng là: {question.correctAnswer}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <FaTimes style={{ marginRight: '8px' }} />
+                                                        <strong>Sai rồi!</strong> Đáp án đúng là: <strong>{question.correctAnswer}</strong>
+                                                        {answers?.[question.id] && ` (Bạn chọn: ${answers[question.id]})`}
+                                                    </>
+                                                )}
+                                            </div>
+                                            {question.explanation && (
+                                                <div style={{ marginTop: '8px', fontStyle: 'italic' }}>
+                                                    <strong>Giải thích:</strong> {question.explanation}
+                                                </div>
+                                            )}
+                                        </Alert>
+                                    )}
+                                </div>
+                            );
+                        })}
+
+                        {idx < arr.length - 1 && (
+                            <div style={{
+                                position: 'absolute',
+                                bottom: 0,
+                                left: '2.5%',
+                                width: '95%',
+                                height: '1px',
+                                backgroundColor: '#d9dee5'
+                            }} />
+                        )}
+                    </div>
+                ));
+            })()}
         </Card.Body>
     );
 };

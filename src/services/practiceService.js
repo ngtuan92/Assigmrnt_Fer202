@@ -10,7 +10,7 @@ export const practiceService = {
     ]);
 
     return examsRes.data.map(exam => {
-      const quiz = quizzesRes.data.find(q => q.id === exam.id);
+      const quiz = quizzesRes.data.find(q => q.id === exam.quizzeId);
       const readingSection = quiz?.sections?.find(s => s.sectionId === 'reading');
       const listeningSection = quiz?.sections?.find(s => s.sectionId === 'listening');
 
@@ -23,12 +23,10 @@ export const practiceService = {
   },
 
   async createPractice(data) {
-    const examRes = await axios.post(`${API_URL}/exams`, {
-      ...data,
-      learners: 0
-    });
+    // Tạo exam trước
+    const examRes = await axios.post(`${API_URL}/exams`, { ...data, learners: 0 });
 
-    // Tạo quiz ngay sau khi tạo exam
+    // Tạo quiz ngay sau khi tạo exam, dùng id exam làm id quiz để đơn giản
     await axios.post(`${API_URL}/quizzes`, {
       id: examRes.data.id,
       createBy: 2,
@@ -51,6 +49,9 @@ export const practiceService = {
         }
       ]
     });
+
+    // Cập nhật lại exam để lưu liên kết quizzeId
+    await axios.patch(`${API_URL}/exams/${examRes.data.id}`, { quizzeId: examRes.data.id });
 
     return examRes.data;
   },

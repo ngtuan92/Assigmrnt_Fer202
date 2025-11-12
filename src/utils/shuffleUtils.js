@@ -25,15 +25,14 @@ export const shuffleGroups = (questions) => {
     const shuffledKeys = shuffleArray(groupKeys);
 
     // Rebuild với số thứ tự mới
-    let newId = 1;
+    let displayId = 1;
     const result = [];
 
     shuffledKeys.forEach(key => {
         groups[key].forEach(q => {
             result.push({
                 ...q,
-                id: newId++, // Số thứ tự mới
-                originalId: q.id // Lưu ID gốc để mapping answers
+                displayId: displayId++
             });
         });
     });

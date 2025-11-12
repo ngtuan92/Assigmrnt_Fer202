@@ -188,7 +188,7 @@ const Intro = () => {
                                                 variant="outline-primary"
                                                 size="sm"
                                                 className='flex-grow-1'
-                                                onClick={() => requestStartTest('listening', practice.id)}
+                                                onClick={() => requestStartTest('listening', practice.quizzeId || practice.id)}
                                                 style={{
                                                     fontWeight: 600,
                                                     borderRadius: '6px'
@@ -200,7 +200,7 @@ const Intro = () => {
                                                 variant="outline-primary"
                                                 size="sm"
                                                 className='flex-grow-1'
-                                                onClick={() => requestStartTest('reading', practice.id)}
+                                                onClick={() => requestStartTest('reading', practice.quizzeId || practice.id)}
                                                 style={{
                                                     fontWeight: 600,
                                                     borderRadius: '6px'

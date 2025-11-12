@@ -19,12 +19,13 @@ const ReadingSection = ({
                 const userAnswer = answers[question.id];
                 const isCorrect = isSubmitted && userAnswer === question.correctAnswer;
                 const isIncorrect = isSubmitted && userAnswer && userAnswer !== question.correctAnswer;
+                const questionNumber  = question.displayId
 
                 return (
                     <div key={question.id} id={`question-${question.id}`} style={{ marginBottom: '2rem' }}>
                         <div className='d-flex justify-content-between align-items-start mb-2'>
                             <div style={{ fontWeight: 500 }}>
-                                <strong>Câu {question.id}:</strong> {question.questionText}
+                                <strong>Câu {questionNumber}:</strong> {question.questionText}
                             </div>
 
                             <button

@@ -3,6 +3,7 @@ import { Card } from 'react-bootstrap';
 import { FaClock, FaStar } from 'react-icons/fa';
 
 const TestSidebar = ({ toeicQuestions, answers, markedQuestions, currentQuestion, scrollToQuestion, timeRemaining, formatTime }) => {
+
     return (
         <div style={{ position: 'sticky', top: '20px' }}>
             <Card className='mb-3' style={{ backgroundColor: timeRemaining < 300 ? '#ffebee' : '#e3f2fd', border: timeRemaining < 300 ? '2px solid #dc8989ff' : '2px solid #8ea9c9ff' }}>
@@ -23,7 +24,8 @@ const TestSidebar = ({ toeicQuestions, answers, markedQuestions, currentQuestion
                         🔢 Bảng câu hỏi
                     </h6>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px', maxHeight: '500px', overflowY: 'auto', padding: '5px' }}>
-                        {toeicQuestions.map((question) => {
+                        {toeicQuestions.map((question, index) => {
+                            const questionNumber = question.displayId || (index + 1);
                             const isAnswered = !!answers[question.id];
                             const isMarked = markedQuestions.has(question.id);
                             const isCurrent = currentQuestion === question.id;
@@ -46,7 +48,7 @@ const TestSidebar = ({ toeicQuestions, answers, markedQuestions, currentQuestion
                                         boxShadow: isCurrent ? '0 2px 8px rgba(21, 101, 192, 0.3)' : 'none'
                                     }}
                                 >
-                                    {question.id}
+                                    {questionNumber}
                                     {isMarked && (
                                         <FaStar style={{ position: 'absolute', top: '-6px', right: '-6px', fontSize: '0.9rem', color: '#ffc107', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))' }} />
                                     )}
